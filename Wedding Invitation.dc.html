@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="./support.js"></script>
 <meta name="ext-resource-dependency" content="./assets/videos/welcome.mp4" data-resource-id="welcome-slide">
-<meta name="ext-resource-dependency" content="./assets/videos/grand-welcome.mp4" data-resource-id="hero-welcome">
 <meta name="ext-resource-dependency" content="./assets/videos/ganesh.mp4" data-resource-id="ganesh">
 <meta name="ext-resource-dependency" content="./assets/videos/tilak.mp4" data-resource-id="ceremony-tilak">
 <meta name="ext-resource-dependency" content="./assets/videos/myra.mp4" data-resource-id="ceremony-myra">
@@ -38,6 +37,15 @@ a:hover{color:#A65E3D}
 @keyframes flicker{0%,100%{opacity:.75;transform:scale(1)}22%{opacity:1;transform:scale(1.05)}48%{opacity:.68;transform:scale(.97)}71%{opacity:.92;transform:scale(1.02)}}
 @keyframes glowDrift{0%,100%{transform:translate(0,0);opacity:.35}50%{transform:translate(40px,-30px);opacity:.7}}
 @keyframes cue{0%{transform:scaleY(0);transform-origin:top}45%{transform:scaleY(1);transform-origin:top}55%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+@keyframes flyFall{from{transform:translate3d(0,0,0)}to{transform:translate3d(0,118vh,0)}}
+@keyframes flySway{from{transform:translateX(-34px)}to{transform:translateX(42px)}}
+@keyframes flyFlutter{from{transform:rotate3d(1,.45,.2,0deg) rotate(0deg)}to{transform:rotate3d(1,.45,.2,360deg) rotate(200deg)}}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes plateFloat{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-8px) rotate(3deg)}}
+@keyframes starRise{from{transform:translate3d(0,0,0)}to{transform:translate3d(-60px,-118vh,0)}}
+@keyframes starTw{0%,100%{opacity:.25;transform:scale(.55) rotate(0deg)}50%{opacity:1;transform:scale(1) rotate(45deg)}}
+@keyframes shoot{0%{opacity:0;transform:translate3d(0,0,0) rotate(-28deg)}3%{opacity:1}12%{opacity:0;transform:translate3d(-55vw,30vh,0) rotate(-28deg)}100%{opacity:0;transform:translate3d(-55vw,30vh,0) rotate(-28deg)}}
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0s!important}}
 </style>
 </helmet>
@@ -113,9 +121,27 @@ a:hover{color:#A65E3D}
       </sc-for>
     </div>
   </sc-if>
+  <div aria-hidden="true" ref="{{ progressRef }}" style="position:absolute; left:0; bottom:-1px; width:100%; height:2px; background:#B39459; transform-origin:left center; transform:scaleX(0)"></div>
 </header>
 
 <main aria-hidden="{{ mainHidden }}">
+
+<section id="blessings" data-screen-label="Ganesh Blessings" style="background:#EFE3D0; scroll-margin-top:62px; position:relative; overflow:hidden">
+  <div style="position:relative; height:100svh; min-height:480px; background:#E8D9C2">
+    <media-slot id="ganesh" video-url="./assets/videos/ganesh.mp4" fit="{{ slideFit }}" placeholder="Lord Ganesh artwork"></media-slot>
+  </div>
+  <div style="position:relative; padding:clamp(72px,10vw,130px) 24px; overflow:hidden; isolation:isolate">
+    {{ mandalas }}
+    {{ diyaGlow }}
+    <div data-reveal="1" lang="hi" style="position:relative; max-width:760px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; gap:24px">
+      <p lang="sa" style="margin:0; font-family:'Noto Serif Devanagari',serif; font-weight:600; font-size:clamp(24px,3vw,34px); color:#681F2D">॥ श्री गणेशाय नमः ॥</p>
+      <h2 style="margin:0; font-family:'Noto Serif Devanagari',serif; font-weight:500; font-size:clamp(34px,4.4vw,48px); color:#681F2D">शुभारंभ</h2>
+      <div style="display:flex; align-items:center; gap:10px"><div style="width:40px; height:1px; background:#B39459"></div><div style="width:6px; height:6px; background:#B39459; transform:rotate(45deg)"></div><div style="width:40px; height:1px; background:#B39459"></div></div>
+      <p style="margin:0; font-family:'Noto Serif Devanagari',serif; font-size:clamp(18px,2vw,21px); line-height:2.05; color:#3A2622; text-wrap:pretty">श्री गणेश जी के शुभ आशीर्वाद से<br>हमारे जीवन के एक नए और खूबसूरत अध्याय का शुभारंभ होने जा रहा है।</p>
+      <p style="margin:0; font-family:'Noto Serif Devanagari',serif; font-size:clamp(18px,2vw,21px); line-height:2.05; color:#3A2622; text-wrap:pretty">इस मंगल अवसर पर आपकी उपस्थिति और आशीर्वाद हमारे लिए अनमोल होंगे।</p>
+    </div>
+  </div>
+</section>
 
 <section id="home" data-screen-label="Welcome Slide" style="position:relative; height:100svh; min-height:480px; background:#E8D9C2; overflow:hidden">
   <media-slot id="welcome-slide" video-url="./assets/videos/welcome.mp4" fit="{{ slideFit }}" placeholder="Ashish weds Meghna — welcome image or video"></media-slot>
@@ -123,7 +149,8 @@ a:hover{color:#A65E3D}
 </section>
 
 <sc-if value="{{ heroArch }}" hint-placeholder-val="{{ true }}">
-<section id="invite" data-screen-label="Hero" style="min-height:100svh; padding:clamp(96px,12vh,130px) clamp(20px,5vw,72px) 64px; display:flex; align-items:center; background:#F4EBDD; position:relative; scroll-margin-top:0">
+<section id="invite" data-screen-label="Hero" style="min-height:100svh; padding:clamp(96px,12vh,130px) clamp(20px,5vw,72px) 64px; display:flex; align-items:center; background:#F4EBDD; position:relative; scroll-margin-top:0; overflow:hidden; isolation:isolate">
+  {{ mandalas }}
   <div style="max-width:1240px; width:100%; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:clamp(40px,6vw,96px)">
     <div style="flex:1 1 380px; display:flex; flex-direction:column; align-items:{{ heroItems }}; text-align:{{ heroAlign }}; gap:6px">
       <div style="font-family:'Noto Serif Devanagari',serif; font-size:16px; color:#681F2D; margin-bottom:18px; opacity:{{ heroOp }}; transition:opacity 1.4s ease .1s">॥ शुभ विवाह ॥</div>
@@ -142,12 +169,12 @@ a:hover{color:#A65E3D}
     <div style="flex:0 1 auto; width:min(100%, 500px, 60vh); opacity:{{ heroOp }}; transition:opacity 2s ease .2s">
       <div style="padding:12px; border:1px solid #B39459; border-radius:999px 999px 0 0">
         <div style="position:relative; width:100%; aspect-ratio:3/4">
-          <media-slot id="hero-welcome" video-url="./assets/videos/grand-welcome.mp4" mask="inset(0 round 999px 999px 0 0)" placeholder="Grand Welcome artwork"></media-slot>
+          <media-slot id="hero-welcome" image-url="./assets/images/couple.jpeg" mask="inset(0 round 999px 999px 0 0)" placeholder="Ashish and Meghna"></media-slot>
         </div>
       </div>
     </div>
   </div>
-  <a href="#blessings" style="position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:10px; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#681F2D; text-decoration:none; opacity:{{ heroOp }}; transition:opacity 1.2s ease 2s">
+  <a href="#countdown" style="position:absolute; left:50%; bottom:22px; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:10px; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#681F2D; text-decoration:none; opacity:{{ heroOp }}; transition:opacity 1.2s ease 2s">
     <span>Discover Our Celebration</span>
     {{ scrollCue }}
   </a>
@@ -157,7 +184,7 @@ a:hover{color:#A65E3D}
 <sc-if value="{{ heroFull }}" hint-placeholder-val="{{ false }}">
 <section id="invite" data-screen-label="Hero" style="height:100svh; min-height:560px; position:relative; background:#17263B; overflow:hidden">
   <div style="position:absolute; inset:0; opacity:{{ heroOp }}; transition:opacity 2s ease">
-    <media-slot id="hero-welcome" video-url="./assets/videos/grand-welcome.mp4" placeholder="Grand Welcome artwork"></media-slot>
+    <media-slot id="hero-welcome" image-url="./assets/images/couple.jpeg" placeholder="Ashish and Meghna"></media-slot>
   </div>
   <div aria-hidden="true" style="position:absolute; left:0; right:0; bottom:0; height:62%; background:linear-gradient(to top, rgba(23,38,59,.88) 0%, rgba(23,38,59,.55) 45%, rgba(23,38,59,0) 100%); pointer-events:none"></div>
   <div style="position:absolute; left:0; right:0; bottom:clamp(60px,10vh,110px); display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px; padding:0 20px; pointer-events:none; color:#FFFDF7">
@@ -169,28 +196,13 @@ a:hover{color:#A65E3D}
     <div style="font-size:13px; font-weight:500; letter-spacing:.28em; text-transform:uppercase; margin-top:22px; opacity:{{ heroOp }}; transition:opacity 1.6s ease 1.4s">20–21 November 2026 · Mandarmani, West Bengal</div>
     <p style="margin:12px 0 0; max-width:520px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(18px,1.8vw,22px); line-height:1.45; opacity:{{ heroOp }}; transition:opacity 1.6s ease 1.6s">With the blessings of our families, we invite you to celebrate the beginning of our forever.</p>
   </div>
-  <a href="#blessings" style="position:absolute; left:50%; bottom:18px; transform:translateX(-50%); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#FFFDF7; text-decoration:none">Discover Our Celebration</a>
+  <a href="#countdown" style="position:absolute; left:50%; bottom:18px; transform:translateX(-50%); font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:#FFFDF7; text-decoration:none">Discover Our Celebration</a>
 </section>
 </sc-if>
 
-<section id="blessings" data-screen-label="Ganesh Blessings" style="background:#EFE3D0; scroll-margin-top:62px; position:relative; overflow:hidden">
-  <div style="position:relative; height:100svh; min-height:480px; background:#E8D9C2">
-    <media-slot id="ganesh" video-url="./assets/videos/ganesh.mp4" fit="{{ slideFit }}" placeholder="Lord Ganesh artwork"></media-slot>
-  </div>
-  <div style="position:relative; padding:clamp(72px,10vw,130px) 24px; overflow:hidden">
-    {{ diyaGlow }}
-    <div data-reveal="1" lang="hi" style="position:relative; max-width:760px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; gap:24px">
-      <p lang="sa" style="margin:0; font-family:'Noto Serif Devanagari',serif; font-weight:600; font-size:clamp(24px,3vw,34px); color:#681F2D">॥ श्री गणेशाय नमः ॥</p>
-      <h2 style="margin:0; font-family:'Noto Serif Devanagari',serif; font-weight:500; font-size:clamp(34px,4.4vw,48px); color:#681F2D">शुभारंभ</h2>
-      <div style="display:flex; align-items:center; gap:10px"><div style="width:40px; height:1px; background:#B39459"></div><div style="width:6px; height:6px; background:#B39459; transform:rotate(45deg)"></div><div style="width:40px; height:1px; background:#B39459"></div></div>
-      <p style="margin:0; font-family:'Noto Serif Devanagari',serif; font-size:clamp(18px,2vw,21px); line-height:2.05; color:#3A2622; text-wrap:pretty">श्री गणेश जी के शुभ आशीर्वाद से<br>हमारे जीवन के एक नए और खूबसूरत अध्याय का शुभारंभ होने जा रहा है।</p>
-      <p style="margin:0; font-family:'Noto Serif Devanagari',serif; font-size:clamp(18px,2vw,21px); line-height:2.05; color:#3A2622; text-wrap:pretty">इस मंगल अवसर पर आपकी उपस्थिति और आशीर्वाद हमारे लिए अनमोल होंगे।</p>
-    </div>
-  </div>
-</section>
-
-<section id="countdown" data-screen-label="Countdown" aria-labelledby="countdown-title" style="background:#681F2D; color:#FFFDF7; padding:clamp(80px,10vw,128px) 24px; scroll-margin-top:62px">
-  <div style="max-width:1000px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px">
+<section id="countdown" data-screen-label="Countdown" aria-labelledby="countdown-title" style="background:#681F2D; color:#FFFDF7; padding:clamp(80px,10vw,128px) 24px; scroll-margin-top:62px; position:relative; overflow:hidden; isolation:isolate">
+  {{ goldDust }}{{ mandalas }}
+  <div style="position:relative; max-width:1000px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; gap:16px">
     <div style="font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:#D6BFA1">Counting down to</div>
     <h2 id="countdown-title" style="margin:0; font-family:'Cormorant Garamond',serif; font-weight:400; font-size:clamp(36px,5vw,60px); line-height:1.1">21 November 2026</h2>
     <sc-if value="{{ countdownLive }}" hint-placeholder-val="{{ true }}">
@@ -213,7 +225,8 @@ a:hover{color:#A65E3D}
   </div>
 </section>
 
-<section id="family" data-screen-label="Family" style="background:#F4EBDD; padding:clamp(88px,11vw,150px) clamp(20px,5vw,72px); scroll-margin-top:62px">
+<section id="family" data-screen-label="Family" style="background:#F4EBDD; padding:clamp(88px,11vw,150px) clamp(20px,5vw,72px); scroll-margin-top:62px; position:relative; overflow:hidden; isolation:isolate">
+  {{ mandalas }}
   <div style="max-width:1180px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:clamp(48px,7vw,88px)">
     <div data-reveal="1" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px">
       <div style="font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:#681F2D">With the blessings of our elders</div>
@@ -230,12 +243,16 @@ a:hover{color:#A65E3D}
         <h3 style="margin:-12px 0 0; font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(32px,3.4vw,42px); letter-spacing:.08em; color:#681F2D">ASHISH MOHATA</h3>
         <div style="display:flex; flex-direction:column; gap:20px">
           <div style="display:flex; flex-direction:column; gap:6px">
-            <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; color:#A65E3D">Grandson of</div>
-            <div style="font-size:16px; line-height:1.7; color:#3A2622">Late Bhagwan Das Ji Mohata<br>Durga Devi Mohata</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:19px; color:#A65E3D">सुपौत्र</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:16px; line-height:1.9; color:#3A2622">स्व. भगवान दास जी मोहता<br>श्रीमती दुर्गा देवी मोहता</div>
           </div>
           <div style="display:flex; flex-direction:column; gap:6px">
-            <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; color:#A65E3D">Son of</div>
-            <div style="font-size:16px; line-height:1.7; color:#3A2622">Satya Narayan Mohata<br>Sarita Devi Mohata</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:19px; color:#A65E3D">सुपुत्र</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:16px; line-height:1.9; color:#3A2622">श्री सत्य नारायण मोहता<br>श्रीमती सरिता देवी मोहता</div>
+          </div>
+          <div lang="hi" style="display:flex; flex-direction:column; gap:6px">
+            <div style="font-family:'Noto Serif Devanagari',serif; font-size:19px; color:#A65E3D">विनीत</div>
+            <div style="font-family:'Noto Serif Devanagari',serif; font-size:16px; line-height:1.9; color:#3A2622; text-wrap:pretty">श्री राम, राधे श्याम, श्री गोपाल, वसु देव, शिव शंकर, देव किशन, पवन कुमार, मनोज कुमार,<br>एवं समस्त मोहता परिवार.</div>
           </div>
         </div>
       </article>
@@ -256,12 +273,16 @@ a:hover{color:#A65E3D}
         <h3 style="margin:-12px 0 0; font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(32px,3.4vw,42px); letter-spacing:.08em; color:#681F2D">MEGHNA GUPTA</h3>
         <div style="display:flex; flex-direction:column; gap:20px">
           <div style="display:flex; flex-direction:column; gap:6px">
-            <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; color:#A65E3D">Granddaughter of</div>
-            <div style="font-size:16px; line-height:1.7; color:#3A2622">Late Mahavir Prashad Chiranewala<br>Achi Devi Gupta</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:19px; color:#A65E3D">सुपौत्री</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:16px; line-height:1.9; color:#3A2622">स्व. महावीर प्रसाद चिड़ानेवाला<br>स्व. अची देवी गुप्ता</div>
           </div>
           <div style="display:flex; flex-direction:column; gap:6px">
-            <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:19px; color:#A65E3D">Daughter of</div>
-            <div style="font-size:16px; line-height:1.7; color:#3A2622">Arvind Kr Gupta<br>Bina Devi Gupta</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:19px; color:#A65E3D">सुपुत्री</div>
+            <div lang="hi" style="font-family:'Noto Serif Devanagari',serif; font-size:16px; line-height:1.9; color:#3A2622">श्री अरविंद कुमार गुप्ता<br>श्रीमती बीना देवी गुप्ता</div>
+          </div>
+          <div lang="hi" style="display:flex; flex-direction:column; gap:6px">
+            <div style="font-family:'Noto Serif Devanagari',serif; font-size:19px; color:#A65E3D">विनीत</div>
+            <div style="font-family:'Noto Serif Devanagari',serif; font-size:16px; line-height:1.9; color:#3A2622; text-wrap:pretty">लक्ष्मण प्रसाद, द्वारका प्रसाद, सांवरमल, विपिन कुमार, पवन कुमार<br>एवम् समस्त गुप्ता परिवार.</div>
           </div>
         </div>
       </article>
@@ -269,7 +290,8 @@ a:hover{color:#A65E3D}
   </div>
 </section>
 
-<section id="invitation" data-screen-label="Hindi Invitation" lang="hi" style="background:#D6BFA1; padding:clamp(72px,10vw,130px) clamp(16px,4vw,48px); scroll-margin-top:62px">
+<section id="invitation" data-screen-label="Hindi Invitation" lang="hi" style="background:#D6BFA1; padding:clamp(72px,10vw,130px) clamp(16px,4vw,48px); scroll-margin-top:62px; position:relative; overflow:hidden; isolation:isolate">
+  {{ mandalas }}{{ rosePlateA }}{{ rosePlateB }}
   <div data-reveal="1" style="max-width:780px; margin:0 auto; position:relative; background:#F8F1E5; padding:clamp(56px,8vw,96px) clamp(24px,6vw,80px); box-shadow:0 30px 60px -30px rgba(58,38,34,.4); display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px">
     <div aria-hidden="true" style="position:absolute; inset:14px; border:1px solid #B39459; pointer-events:none"></div>
     <div aria-hidden="true" style="position:absolute; inset:20px; border:1px solid rgba(179,148,89,.45); pointer-events:none"></div>
@@ -287,7 +309,8 @@ a:hover{color:#A65E3D}
   </div>
 </section>
 
-<section id="events" data-screen-label="Itinerary" style="background:#F4EBDD; padding:clamp(88px,11vw,150px) clamp(20px,5vw,72px); scroll-margin-top:62px">
+<section id="events" data-screen-label="Itinerary" style="background:#F4EBDD; padding:clamp(88px,11vw,150px) clamp(20px,5vw,72px); scroll-margin-top:62px; position:relative; overflow:hidden; isolation:isolate">
+  {{ mandalas }}
   <div style="max-width:1120px; margin:0 auto; display:flex; flex-direction:column; gap:clamp(44px,6vw,72px)">
     <div data-reveal="1" style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px">
       <div style="font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:#681F2D">The Celebrations</div>
@@ -301,7 +324,7 @@ a:hover{color:#A65E3D}
             <div style="font-size:12px; letter-spacing:.2em; text-transform:uppercase; color:#646B4D">{{ d.date }}</div>
           </div>
           <sc-for list="{{ d.items }}" as="e" hint-placeholder-count="3">
-            <a href="{{ e.href }}" style="display:grid; grid-template-columns:40px minmax(0,1fr) auto; gap:14px; align-items:baseline; padding:20px 0; border-bottom:1px solid rgba(179,148,89,.5); text-decoration:none; color:#3A2622" style-hover="color:#681F2D">
+            <a href="{{ e.href }}" style="display:grid; grid-template-columns:40px minmax(0,1fr) auto; gap:14px; align-items:baseline; padding:20px 0; border-bottom:1px solid rgba(179,148,89,.5); text-decoration:none; color:#3A2622; transition:padding .45s cubic-bezier(.2,.7,.2,1), color .3s ease" style-hover="color:#681F2D; padding-left:12px">
               <span style="font-family:'Cormorant Garamond',serif; font-size:20px; color:#A65E3D">{{ e.no }}</span>
               <span style="font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(21px,2vw,25px); line-height:1.2">{{ e.title }}</span>
               <span style="font-size:13px; font-weight:500; color:#681F2D; text-align:right">{{ e.time }}</span>
@@ -323,13 +346,14 @@ a:hover{color:#A65E3D}
     </sc-if>
     <section id="{{ ev.anchor }}" data-screen-label="{{ ev.title }}" aria-labelledby="{{ ev.titleId }}" style="background:{{ ev.th.bg }}; color:{{ ev.th.ink }}; scroll-margin-top:62px; position:relative; overflow:hidden">
       <sc-if value="{{ ev.hasSlide }}" hint-placeholder-val="{{ true }}">
-      <div style="position:relative; height:100svh; min-height:480px; background:{{ ev.th.slide }}">
+      <div data-reveal-media="1" style="position:relative; height:100svh; min-height:480px; background:{{ ev.th.slide }}">
         <media-slot id="{{ ev.slot }}" image-url="{{ ev.image }}" video-url="{{ ev.video }}" poster-url="{{ ev.poster }}" fit="{{ slideFit }}" placeholder="{{ ev.placeholder }}"></media-slot>
       </div>
       </sc-if>
-      <div style="position:relative; padding:clamp(72px,9vw,128px) clamp(20px,5vw,72px); overflow:hidden">
+      <div style="position:relative; padding:clamp(72px,9vw,128px) clamp(20px,5vw,72px); overflow:hidden; isolation:isolate">
+        {{ mandalas }}
         <sc-if value="{{ ev.isSangeet }}" hint-placeholder-val="{{ false }}">{{ sangeetLights }}</sc-if>
-        <sc-if value="{{ ev.isPhera }}" hint-placeholder-val="{{ false }}">{{ fireGlow }}</sc-if>
+        <sc-if value="{{ ev.isPhera }}" hint-placeholder-val="{{ false }}">{{ fireGlow }}{{ goldDust }}</sc-if>
 
         <sc-if value="{{ ev.isColumns }}" hint-placeholder-val="{{ true }}">
           <div data-reveal="1" style="position:relative; max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap:clamp(32px,6vw,96px); align-items:start">
@@ -373,7 +397,8 @@ a:hover{color:#A65E3D}
   </div>
 </sc-for>
 
-<section id="venue" data-screen-label="Venue" style="background:#F4EBDD; padding:clamp(88px,11vw,150px) clamp(20px,5vw,72px); scroll-margin-top:62px">
+<section id="venue" data-screen-label="Venue" style="background:#F4EBDD; padding:clamp(88px,11vw,150px) clamp(20px,5vw,72px); scroll-margin-top:62px; position:relative; overflow:hidden; isolation:isolate">
+  {{ mandalas }}
   <div style="max-width:1180px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 380px), 1fr)); gap:clamp(32px,4vw,56px); align-items:stretch">
     <div data-reveal="1" style="position:relative; background:#FFFDF7; padding:clamp(40px,5vw,64px); display:flex; flex-direction:column; align-items:flex-start; gap:20px; box-shadow:0 30px 60px -36px rgba(58,38,34,.4)">
       <div aria-hidden="true" style="position:absolute; inset:12px; border:1px solid rgba(179,148,89,.6); pointer-events:none"></div>
@@ -403,74 +428,24 @@ a:hover{color:#A65E3D}
   </div>
 </section>
 
-<section id="rsvp" data-screen-label="RSVP" aria-labelledby="rsvp-title" style="background:#EFE3D0; padding:clamp(88px,11vw,150px) clamp(16px,4vw,48px); scroll-margin-top:62px">
+<section id="rsvp" data-screen-label="RSVP" aria-labelledby="rsvp-title" style="background:#EFE3D0; padding:clamp(88px,11vw,150px) clamp(16px,4vw,48px); scroll-margin-top:62px; position:relative; overflow:hidden; isolation:isolate">
+  {{ mandalas }}{{ rosePlateC }}{{ rosePlateD }}
   <div data-reveal="1" style="max-width:680px; margin:0 auto; position:relative; background:#FFFDF7; padding:clamp(40px,6vw,72px) clamp(24px,6vw,72px); box-shadow:0 30px 60px -36px rgba(58,38,34,.4); display:flex; flex-direction:column; gap:28px">
     <div aria-hidden="true" style="position:absolute; inset:12px; border:1px solid rgba(179,148,89,.6); pointer-events:none"></div>
     <div style="display:flex; flex-direction:column; align-items:center; text-align:center; gap:14px">
-      <div style="font-size:12px; letter-spacing:.32em; text-transform:uppercase; color:#681F2D">RSVP</div>
       <h2 id="rsvp-title" style="margin:0; font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(32px,4.4vw,50px); line-height:1.08; letter-spacing:.04em; color:#681F2D">JOIN US AS WE BEGIN OUR FOREVER</h2>
       <p style="margin:0; max-width:460px; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:21px; line-height:1.5; color:#3A2622">Your presence would mean the world to us. Kindly let us know if you can join our celebrations.</p>
     </div>
 
-    <sc-if value="{{ rsvpOpen }}" hint-placeholder-val="{{ true }}">
-      <form noValidate="{{ true }}" onSubmit="{{ submitRsvp }}" style="position:relative; display:flex; flex-direction:column; gap:24px">
-        <div style="display:flex; flex-direction:column; gap:8px">
-          <label for="rsvp-name" style="font-size:12px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:#3A2622">Full name <span style="color:#681F2D">*</span></label>
-          <input id="rsvp-name" type="text" autoComplete="name" value="{{ form.name }}" onChange="{{ onName }}" aria-required="true" aria-invalid="{{ nameInvalid }}" aria-describedby="rsvp-name-error" style="font-family:Inter,sans-serif; font-size:16px; color:#3A2622; background:#F8F1E5; border:1px solid {{ nameBorder }}; padding:14px 16px; min-height:50px; outline-color:#B39459">
-          <div id="rsvp-name-error" role="alert" style="font-size:13px; color:#8E1B2E; min-height:0">{{ errors.name }}</div>
-        </div>
-        <fieldset aria-describedby="rsvp-attend-error" style="border:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px">
-          <legend style="padding:0; margin-bottom:10px; font-size:12px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:#3A2622">Attendance <span style="color:#681F2D">*</span></legend>
-          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px">
-            <label style="display:flex; align-items:center; gap:12px; min-height:54px; padding:0 16px; border:1px solid {{ yesBorder }}; background:{{ yesBg }}; cursor:pointer; font-family:'Cormorant Garamond',serif; font-size:21px; color:#3A2622">
-              <input id="rsvp-attend-yes" type="radio" name="attending" value="yes" checked="{{ attendYes }}" onChange="{{ onAttendYes }}" style="width:18px; height:18px; accent-color:#681F2D; margin:0">
-              Joyfully accepts
-            </label>
-            <label style="display:flex; align-items:center; gap:12px; min-height:54px; padding:0 16px; border:1px solid {{ noBorder }}; background:{{ noBg }}; cursor:pointer; font-family:'Cormorant Garamond',serif; font-size:21px; color:#3A2622">
-              <input type="radio" name="attending" value="no" checked="{{ attendNo }}" onChange="{{ onAttendNo }}" style="width:18px; height:18px; accent-color:#681F2D; margin:0">
-              Sending blessings from afar
-            </label>
-          </div>
-          <div id="rsvp-attend-error" role="alert" style="font-size:13px; color:#8E1B2E">{{ errors.attending }}</div>
-        </fieldset>
-        <sc-if value="{{ showGuests }}" hint-placeholder-val="{{ true }}">
-          <div style="display:flex; flex-direction:column; gap:8px">
-            <label for="rsvp-guests" style="font-size:12px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:#3A2622">Number of guests</label>
-            <input id="rsvp-guests" type="number" inputMode="numeric" min="1" max="10" value="{{ form.guests }}" onChange="{{ onGuests }}" aria-invalid="{{ guestsInvalid }}" aria-describedby="rsvp-guests-hint rsvp-guests-error" style="font-family:Inter,sans-serif; font-size:16px; color:#3A2622; background:#F8F1E5; border:1px solid {{ guestsBorder }}; padding:14px 16px; min-height:50px; max-width:160px">
-            <div id="rsvp-guests-hint" style="font-size:13px; color:#5A4538">Including yourself, up to 10.</div>
-            <div id="rsvp-guests-error" role="alert" style="font-size:13px; color:#8E1B2E">{{ errors.guests }}</div>
-          </div>
-        </sc-if>
-        <div style="display:flex; flex-direction:column; gap:8px">
-          <label for="rsvp-message" style="font-size:12px; font-weight:500; letter-spacing:.16em; text-transform:uppercase; color:#3A2622">Message for the couple <span style="text-transform:none; letter-spacing:0; color:#5A4538">(optional)</span></label>
-          <textarea id="rsvp-message" rows="4" value="{{ form.message }}" onChange="{{ onMessage }}" style="font-family:Inter,sans-serif; font-size:16px; line-height:1.5; color:#3A2622; background:#F8F1E5; border:1px solid rgba(179,148,89,.8); padding:14px 16px; resize:vertical"></textarea>
-        </div>
-        <sc-if value="{{ rsvpError }}" hint-placeholder-val="{{ false }}">
-          <div role="alert" style="font-size:14px; color:#8E1B2E; border:1px solid #8E1B2E; padding:12px 16px">Your response could not be sent. Please try again in a moment.</div>
-        </sc-if>
-        <button type="submit" disabled="{{ sending }}" style="align-self:center; font-family:Inter,sans-serif; min-height:52px; padding:0 40px; background:#681F2D; color:#FFFDF7; border:none; font-size:12px; font-weight:500; letter-spacing:.26em; text-transform:uppercase; cursor:pointer; box-shadow:0 0 0 4px #FFFDF7, 0 0 0 5px #B39459; transition:transform .18s ease, background .3s ease" style-hover="background:#56182A" style-active="transform:scale(.97)">{{ submitLabel }}</button>
-      </form>
-    </sc-if>
-
-    <sc-if value="{{ rsvpSent }}" hint-placeholder-val="{{ false }}">
-      <div role="status" tabindex="-1" id="rsvp-confirm" style="position:relative; display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; padding:12px 0; outline:none">
-        <div aria-hidden="true" style="width:64px; height:64px; border-radius:50%; background:#681F2D; color:#E9D3A4; display:flex; align-items:center; justify-content:center; font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px">A·M</div>
-        <h3 style="margin:0; font-family:'Cormorant Garamond',serif; font-weight:500; font-size:clamp(28px,3.4vw,38px); color:#681F2D">{{ confirmTitle }}</h3>
-        <p style="margin:0; max-width:440px; font-family:'Cormorant Garamond',serif; font-size:21px; line-height:1.5; color:#3A2622">{{ confirmBody }}</p>
-        <sc-if value="{{ notDelivered }}" hint-placeholder-val="{{ false }}">
-          <p style="margin:0; max-width:440px; font-size:13px; line-height:1.6; color:#5A4538; border:1px dashed #A65E3D; padding:12px 16px">Preview mode: RSVP delivery is not connected yet, so this response has not been sent to the couple.</p>
-        </sc-if>
-        <button type="button" onClick="{{ editRsvp }}" style="font-family:Inter,sans-serif; min-height:44px; padding:0 22px; background:transparent; border:1px solid #681F2D; color:#681F2D; font-size:12px; letter-spacing:.2em; text-transform:uppercase; cursor:pointer">Edit response</button>
-      </div>
-    </sc-if>
   </div>
 </section>
 
 <section id="farewell" data-screen-label="Farewell" style="background:#F4EBDD; scroll-margin-top:62px; position:relative; overflow:hidden">
-  <div style="position:relative; height:100svh; min-height:480px; background:#E8D9C2">
+  <div data-reveal-media="1" style="position:relative; height:100svh; min-height:480px; background:#E8D9C2">
     <media-slot id="farewell" video-url="./assets/videos/farewell.mp4" fit="{{ slideFit }}" placeholder="Wedding farewell artwork"></media-slot>
   </div>
-  <div style="position:relative; padding:clamp(80px,10vw,140px) clamp(20px,5vw,72px); overflow:hidden">
+  <div style="position:relative; padding:clamp(80px,10vw,140px) clamp(20px,5vw,72px); overflow:hidden; isolation:isolate">
+    {{ mandalas }}
     {{ farewellPetals }}
     <div data-reveal="1" style="position:relative; max-width:760px; margin:0 auto; display:flex; flex-direction:column; align-items:center; text-align:center; gap:22px">
       <p style="margin:0; max-width:620px; font-family:'Cormorant Garamond',serif; font-size:clamp(28px,3.6vw,44px); line-height:1.3; color:#3A2622; text-wrap:balance">Two families, countless memories, and one beautiful new beginning.</p>
@@ -490,11 +465,14 @@ a:hover{color:#A65E3D}
       <div style="font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#D6BFA1">20–21 November 2026 · Sun City Resort, Mandarmani</div>
     </div>
     <div style="display:flex; flex-wrap:wrap; gap:12px">
-      <a href="#rsvp" style="display:inline-flex; align-items:center; min-height:44px; padding:0 20px; border:1px solid #B39459; color:#FFFDF7; font-size:12px; letter-spacing:.2em; text-transform:uppercase; text-decoration:none" style-hover="color:#E9D3A4">RSVP</a>
       <button type="button" onClick="{{ replay }}" style="font-family:Inter,sans-serif; min-height:44px; padding:0 20px; background:transparent; border:1px solid #B39459; color:#FFFDF7; font-size:12px; letter-spacing:.2em; text-transform:uppercase; cursor:pointer" style-hover="color:#E9D3A4">Replay invitation</button>
     </div>
   </div>
 </footer>
+
+<sc-if value="{{ showStars }}" hint-placeholder-val="{{ false }}">{{ starsLayer }}</sc-if>
+<sc-if value="{{ showFlyers }}" hint-placeholder-val="{{ false }}">{{ flyers }}</sc-if>
+<div aria-hidden="true" style="position:fixed; inset:0; z-index:45; pointer-events:none; mix-blend-mode:multiply; opacity:.55; background-image:url('data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27180%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.9%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix values=%270 0 0 0 .4 0 0 0 0 .3 0 0 0 0 .2 0 0 0 .08 0%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E')"></div>
 
 <sc-if value="{{ hasMusic }}" hint-placeholder-val="{{ false }}">
   <audio ref="{{ audioRef }}" loop="{{ true }}" preload="none"></audio>
@@ -502,8 +480,9 @@ a:hover{color:#A65E3D}
 </sc-if>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Arch frame&quot;,&quot;Full bleed&quot;],&quot;default&quot;:&quot;Arch frame&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;slideFit&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Fill screen&quot;,&quot;Whole artwork&quot;],&quot;default&quot;:&quot;Fill screen&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;skipIntro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;rsvpEndpoint&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Integrations&quot;},&quot;musicUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Integrations&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;heroLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Arch frame&quot;,&quot;Full bleed&quot;],&quot;default&quot;:&quot;Arch frame&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;slideFit&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Fill screen&quot;,&quot;Whole artwork&quot;],&quot;default&quot;:&quot;Fill screen&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;skipIntro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Layout&quot;},&quot;rsvpEndpoint&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Integrations&quot;},&quot;musicUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Integrations&quot;},&quot;petals&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Off&quot;,&quot;Gentle&quot;,&quot;Festive&quot;],&quot;default&quot;:&quot;Gentle&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Effects&quot;},&quot;stars&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Effects&quot;},&quot;mandalas&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Effects&quot;}}">
 const TARGET = Date.parse('2026-11-21T00:00:00+05:30');
+const DEFAULT_MUSIC = './assets/audio/vaaroon-mirzapur.mp3';
 
 // Edit dates, times, copy and assets here. image: 'assets/x.jpg' prefills a slot; video + poster swaps the slot for a video.
 const EVENTS = [
@@ -517,7 +496,7 @@ const EVENTS = [
   { id: 'pool', no: '04', title: 'Pool Party', day: 2, date: '21 November 2026', time: '7:00 AM onwards', layout: 'split', theme: 'coast', reverse: true,
     dayLabel: 'Day Two', dayDate: '21 November 2026', image: '', video: './assets/videos/pool-party.mp4', poster: '',
     copy: 'A refreshing morning of sunshine, laughter, and happy moments as we celebrate together by the water.' },
-  { id: 'haldi', no: '05', title: 'Beach Carnival & Haldi', day: 2, date: '21 November 2026', time: '9:00 AM onwards', layout: 'wide', theme: 'ivory', image: '', video: './assets/videos/beach-carnival-haldi.mp4', poster: '',
+  { id: 'haldi', no: '05', title: 'Carnival & Haldi', day: 2, date: '21 November 2026', time: '9:00 AM onwards', layout: 'wide', theme: 'ivory', image: '', video: './assets/videos/beach-carnival-haldi.mp4', poster: '',
     copy: 'Sunshine, flowers, playful traditions, and endless smiles. Join us for a joyful celebration where the colours of love meet the magic of the beach.' },
   { id: 'baraat', no: '06', title: 'Nikashi / Baraat', day: 2, date: '21 November 2026', time: '5:00 PM onwards', layout: 'split', theme: 'sand', reverse: false, image: '', video: './assets/videos/baraat.mp4', poster: '',
     copy: 'The celebration continues with music, family, and a grand procession filled with excitement and blessings. Come join the joy as we move towards the next beautiful chapter.' },
@@ -536,7 +515,7 @@ const THEMES = {
 };
 
 const NAV = [
-  { href: '#home', label: 'Home' }, { href: '#blessings', label: 'Blessings' }, { href: '#family', label: 'Family' },
+  { href: '#blessings', label: 'Home' }, { href: '#home', label: 'Invitation' }, { href: '#family', label: 'Family' },
   { href: '#events', label: 'Events' }, { href: '#venue', label: 'Venue' }, { href: '#rsvp', label: 'RSVP' },
 ];
 
@@ -552,6 +531,109 @@ function makePetals(n, seed, opacity) {
   return React.createElement('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 0 } }, kids);
 }
 
+function makeFlyers(n, seed, mode) {
+  let s = seed;
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  const ce = React.createElement;
+  const kinds = [
+    { w: 1, h: 1.45, r: '150% 0 150% 0', bg: 'linear-gradient(135deg,#B83A50 0%,#7E1F33 100%)' },
+    { w: 1, h: 1.3, r: '150% 0 150% 0', bg: 'linear-gradient(135deg,#F6BE5A 0%,#E0861F 100%)' },
+    { w: 1.1, h: 1.1, r: '50%', bg: 'radial-gradient(circle,#9A4A12 0 14%,#E8891C 17% 46%,#F4B13E 50% 70%,#E0861F 74%)' },
+    { w: .8, h: 1.25, r: '150% 0 150% 0', bg: 'linear-gradient(135deg,#E9D3A4 0%,#B39459 100%)' },
+    { w: 1, h: 1.4, r: '150% 0 150% 0', bg: 'linear-gradient(135deg,#F2C6C0 0%,#C86A72 100%)' },
+  ];
+  const ambient = mode === 'ambient', burst = mode === 'burst';
+  const kids = Array.from({ length: n }, (_, i) => {
+    const k = kinds[i % kinds.length];
+    const size = 9 + rnd() * 10;
+    const dur = burst ? 3.6 + rnd() * 2.6 : 16 + rnd() * 14;
+    const delay = burst ? rnd() * 1.4 : -rnd() * dur;
+    const sway = 3 + rnd() * 3, flut = 3 + rnd() * 4;
+    const op = ambient ? 0.55 + rnd() * 0.3 : 0.9;
+    return ce('div', { key: i, style: { position: 'absolute', left: (rnd() * 100).toFixed(1) + '%', top: '-8vh', animation: `flyFall ${dur.toFixed(1)}s linear ${delay.toFixed(1)}s infinite both`, willChange: 'transform' } },
+      ce('div', { style: { animation: `flySway ${sway.toFixed(1)}s ease-in-out ${(-rnd() * sway).toFixed(1)}s infinite alternate both` } },
+        ce('div', { style: { width: size * k.w, height: size * k.h, borderRadius: k.r, background: k.bg, opacity: op, boxShadow: '0 2px 4px rgba(58,38,34,.18)', animation: `flyFlutter ${flut.toFixed(1)}s linear ${(-rnd() * flut).toFixed(1)}s infinite` } })));
+  });
+  return ce('div', { 'aria-hidden': true, style: { position: ambient ? 'fixed' : 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: ambient ? 40 : 0 } }, kids);
+}
+
+function makeDust(n, seed) {
+  let s = seed;
+  const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  const kids = Array.from({ length: n }, (_, i) => {
+    const sz = 2 + rnd() * 2.5, d = 3 + rnd() * 4;
+    return React.createElement('div', { key: i, style: { position: 'absolute', left: (rnd() * 100).toFixed(1) + '%', top: (rnd() * 100).toFixed(1) + '%', width: sz, height: sz, borderRadius: '50%', background: '#E9D3A4', boxShadow: '0 0 6px 1px rgba(233,211,164,.7)', opacity: 0, animation: `twinkle ${d.toFixed(1)}s ease-in-out ${(-rnd() * 6).toFixed(1)}s infinite` } });
+  });
+  return React.createElement('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' } }, kids);
+}
+
+const STAR = 'polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%)';
+
+function seeded(seed) { let s = seed; return () => (s = (s * 9301 + 49297) % 233280) / 233280; }
+
+function makeStars(n, seed) {
+  const rnd = seeded(seed), ce = React.createElement;
+  const kids = Array.from({ length: n }, (_, i) => {
+    const size = 6 + rnd() * 8, dur = 18 + rnd() * 16, delay = -rnd() * dur, tw = 2 + rnd() * 2.5;
+    return ce('div', { key: i, style: { position: 'absolute', left: (rnd() * 100).toFixed(1) + '%', bottom: '-6vh', animation: `starRise ${dur.toFixed(1)}s linear ${delay.toFixed(1)}s infinite`, willChange: 'transform' } },
+      ce('div', { style: { filter: 'drop-shadow(0 0 4px rgba(214,170,80,.9))' } },
+        ce('div', { style: { width: size, height: size, background: i % 2 ? '#D9B25E' : '#F2DC9E', clipPath: STAR, animation: `starTw ${tw.toFixed(1)}s ease-in-out ${(-rnd() * tw).toFixed(1)}s infinite` } })));
+  });
+  [[8, 95, 9, 2], [20, 72, 13, 7]].forEach(([top, left, d, dl], j) => kids.push(ce('div', { key: 'sh' + j, style: { position: 'absolute', top: top + '%', left: left + '%', width: 150, height: 2, borderRadius: 2, background: 'linear-gradient(270deg, rgba(242,220,158,0), #F2DC9E 70%, #FFFDF7)', boxShadow: '0 0 8px rgba(214,170,80,.8)', opacity: 0, animation: `shoot ${d}s ease-in ${dl}s infinite` } })));
+  return ce('div', { 'aria-hidden': true, style: { position: 'fixed', inset: 0, overflow: 'hidden', pointerEvents: 'none', zIndex: 39 } }, kids);
+}
+
+function makeSparkles(n, seed) {
+  const rnd = seeded(seed), ce = React.createElement;
+  return ce('div', { 'aria-hidden': true, style: { position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' } },
+    Array.from({ length: n }, (_, i) => { const sz = 7 + rnd() * 9, d = 2.4 + rnd() * 3;
+      return ce('div', { key: i, style: { position: 'absolute', left: (rnd() * 100).toFixed(1) + '%', top: (rnd() * 100).toFixed(1) + '%', filter: 'drop-shadow(0 0 5px rgba(233,211,164,.9))' } },
+        ce('div', { style: { width: sz, height: sz, background: '#F2DC9E', clipPath: STAR, animation: `starTw ${d.toFixed(1)}s ease-in-out ${(-rnd() * d).toFixed(1)}s infinite` } })); }));
+}
+
+function mandalaEl(side) {
+  const ce = React.createElement, c = '#B39459';
+  const mask = (a, b) => `radial-gradient(circle closest-side, transparent ${a}%, #000 ${a + 0.4}%, #000 ${b}%, transparent ${b + 0.4}%)`;
+  const ring = (a, b, bg, k) => ce('div', { key: k, style: { position: 'absolute', inset: 0, borderRadius: '50%', background: bg, WebkitMaskImage: mask(a, b), maskImage: mask(a, b) } });
+  const circle = (r, k, w) => ce('div', { key: k, style: { position: 'absolute', left: (50 - r / 2) + '%', top: (50 - r / 2) + '%', width: r + '%', height: r + '%', borderRadius: '50%', border: `${w || 1}px solid ${c}` } });
+  const petals = (count, r1, r2, w, off, k) => ce('div', { key: k, style: { position: 'absolute', inset: 0 } },
+    Array.from({ length: count }, (_, i) => ce('div', { key: i, style: { position: 'absolute', left: (50 - w / 2) + '%', top: (50 - r2 / 2) + '%', width: w + '%', height: ((r2 - r1) / 2) + '%', transformOrigin: `50% ${(r2 / (r2 - r1)) * 100}%`, transform: `rotate(${off + i * 360 / count}deg)`, borderRadius: '50% 50% 50% 50% / 70% 70% 30% 30%', border: `1px solid ${c}` } })));
+  const kids = [
+    circle(99, 'c1', 1.5),
+    ring(88, 96, `repeating-conic-gradient(${c} 0deg 1.4deg, transparent 1.4deg 6deg)`, 'r1'),
+    circle(87, 'c2'),
+    petals(16, 44, 84, 11, 0, 'p1'),
+    petals(16, 50, 76, 6, 11.25, 'p1b'),
+    ring(40, 43, `repeating-conic-gradient(${c} 0deg 3deg, transparent 3deg 15deg)`, 'r2'),
+    petals(12, 22, 40, 10, 15, 'p2'),
+    circle(22, 'c3'),
+    petals(8, 6, 21, 7, 0, 'p3'),
+    circle(6, 'c4'),
+    ce('div', { key: 'dot', style: { position: 'absolute', left: '48.5%', top: '48.5%', width: '3%', height: '3%', borderRadius: '50%', background: c } }),
+  ];
+  const L = side === 'l';
+  return ce('div', { key: side, 'aria-hidden': true, style: { position: 'absolute', top: '50%', [L ? 'left' : 'right']: 0, width: 'clamp(240px, 34vw, 520px)', aspectRatio: '1 / 1', transform: `translate(${L ? '-50%' : '50%'}, -50%)`, opacity: 0.24, zIndex: -1, pointerEvents: 'none' } },
+    ce('div', { style: { position: 'absolute', inset: 0, animation: `spin ${L ? 140 : 160}s linear infinite${L ? '' : ' reverse'}` } }, kids));
+}
+
+function makeRosePlate(seed, pos) {
+  const rnd = seeded(seed), ce = React.createElement;
+  const cols = ['linear-gradient(135deg,#C9485E 0%,#7E1F33 100%)', 'linear-gradient(135deg,#B83A50 0%,#681F2D 100%)', 'linear-gradient(135deg,#F0B5B5 0%,#C86A72 100%)'];
+  const petal = (d1, d2, i, sz) => { const a = rnd() * Math.PI * 2, d = d1 + rnd() * (d2 - d1);
+    return ce('div', { key: 'p' + i, style: { position: 'absolute', left: (50 + Math.cos(a) * d) + '%', top: (50 + Math.sin(a) * d) + '%', width: sz + '%', height: (sz * 1.4) + '%', marginLeft: (-sz / 2) + '%', marginTop: (-sz * 0.7) + '%', borderRadius: '150% 0 150% 0', background: cols[i % 3], transform: `rotate(${Math.round(rnd() * 360)}deg)`, boxShadow: '0 1px 2px rgba(58,38,34,.35)' } }); };
+  const rose = (x, y, k) => ce('div', { key: k, style: { position: 'absolute', left: x + '%', top: y + '%', width: '21%', height: '21%', marginLeft: '-10.5%', marginTop: '-10.5%', borderRadius: '50%', background: 'radial-gradient(circle at 46% 42%, #D45A6E 0 10%, #8E2438 12% 24%, #C2445A 26% 42%, #86203A 44% 58%, #B23A50 60% 78%, #6E1828 80%)', boxShadow: '0 2px 5px rgba(58,38,34,.45)' } });
+  const kids = [
+    ce('div', { key: 'base', style: { position: 'absolute', inset: 0, borderRadius: '50%', background: 'radial-gradient(circle at 38% 32%, #F1DDAA 0%, #C9A65E 40%, #8E6B2E 100%)', boxShadow: '0 16px 30px -12px rgba(58,38,34,.5), inset 0 0 0 2px rgba(255,253,247,.35)' } }),
+    ce('div', { key: 'rim', style: { position: 'absolute', inset: '5%', borderRadius: '50%', border: '2px dotted rgba(110,80,30,.6)' } }),
+    ce('div', { key: 'well', style: { position: 'absolute', inset: '13%', borderRadius: '50%', background: 'radial-gradient(circle at 50% 45%, #D9BC78 0%, #B3924F 70%, #9A7A3C 100%)', boxShadow: 'inset 0 4px 10px rgba(74,50,15,.45)' } }),
+    ...Array.from({ length: 20 }, (_, i) => petal(0, 28, i, 10)),
+    rose(40, 40, 'r1'), rose(61, 50, 'r2'), rose(45, 63, 'r3'),
+    ...Array.from({ length: 5 }, (_, i) => petal(54, 64, i + 30, 9)),
+  ];
+  return ce('div', { 'aria-hidden': true, style: { position: 'absolute', ...pos, width: 'clamp(110px, 13vw, 190px)', aspectRatio: '1 / 1', zIndex: -1, pointerEvents: 'none' } },
+    ce('div', { style: { position: 'absolute', inset: 0, animation: `plateFloat ${(6 + rnd() * 3).toFixed(1)}s ease-in-out infinite` } }, kids));
+}
+
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -563,8 +645,19 @@ class Component extends DCLogic {
     };
     this.timers = [];
     this.audioRef = React.createRef();
-    this.overlayPetals = makePetals(this.reduced ? 0 : 16, 7, 0.85);
-    this.farewellPetals = makePetals(this.reduced ? 0 : 9, 31, 0.5);
+    this.overlayPetals = makeFlyers(this.reduced ? 0 : 26, 7, 'burst');
+    const small = typeof window !== 'undefined' && window.innerWidth < 760;
+    this.flyers = { Gentle: makeFlyers(small ? 6 : 11, 11, 'ambient'), Festive: makeFlyers(small ? 12 : 22, 19, 'ambient') };
+    this.goldDust = makeDust(this.reduced ? 0 : (small ? 14 : 26), 5);
+    this.progressRef = React.createRef();
+    this.goldDust = React.createElement(React.Fragment, null, this.goldDust, makeSparkles(this.reduced ? 0 : (small ? 6 : 12), 13));
+    this.mandalaPair = React.createElement(React.Fragment, null, mandalaEl('l'), mandalaEl('r'));
+    this.starsLayer = makeStars(small ? 10 : 18, 23);
+    this.rosePlateA = makeRosePlate(41, { left: '4%', bottom: '5%' });
+    this.rosePlateB = makeRosePlate(77, { right: '4%', top: '7%' });
+    this.rosePlateC = makeRosePlate(19, { left: '5%', bottom: '8%' });
+    this.rosePlateD = makeRosePlate(63, { right: '6%', bottom: '16%' });
+    this.farewellPetals = makeFlyers(this.reduced ? 0 : 12, 31, 'section');
     this.diyaGlow = React.createElement('div', { 'aria-hidden': true, style: { position: 'absolute', left: '-30%', right: '-30%', bottom: '-18%', height: '70%', background: 'radial-gradient(ellipse at 50% 70%, rgba(230,160,70,.42) 0%, rgba(230,160,70,.12) 40%, rgba(230,160,70,0) 68%)', animation: 'flicker 3.4s ease-in-out infinite', pointerEvents: 'none' } });
     this.fireGlow = React.createElement('div', { 'aria-hidden': true, style: { position: 'absolute', left: '50%', bottom: '-10%', width: '90%', height: '60%', marginLeft: '-45%', background: 'radial-gradient(ellipse at 50% 80%, rgba(230,140,60,.35) 0%, rgba(179,148,89,.12) 40%, rgba(23,38,59,0) 70%)', animation: 'flicker 2.6s ease-in-out infinite', pointerEvents: 'none' } });
     const orb = (l, t, c, d, dl) => React.createElement('div', { key: l + t, style: { position: 'absolute', left: l, top: t, width: '38vw', height: '38vw', maxWidth: 520, maxHeight: 520, borderRadius: '50%', background: `radial-gradient(circle, ${c} 0%, rgba(0,0,0,0) 65%)`, animation: `glowDrift ${d}s ease-in-out ${dl}s infinite` } });
@@ -577,6 +670,16 @@ class Component extends DCLogic {
     this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000);
     this.onResize = () => { const m = window.innerWidth < 760; if (m !== this.state.mobile) this.setState({ mobile: m, menuOpen: false }); };
     window.addEventListener('resize', this.onResize);
+    this.onScroll = () => {
+      if (this._raf) return;
+      this._raf = requestAnimationFrame(() => {
+        this._raf = 0;
+        const el = this.progressRef.current; if (!el) return;
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        el.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+      });
+    };
+    window.addEventListener('scroll', this.onScroll, { passive: true });
     this.syncBody();
     this.initReveal();
   }
@@ -589,6 +692,8 @@ class Component extends DCLogic {
     clearInterval(this.tick);
     this.timers.forEach(clearTimeout);
     window.removeEventListener('resize', this.onResize);
+    window.removeEventListener('scroll', this.onScroll);
+    if (this._raf) cancelAnimationFrame(this._raf);
     if (this.io) this.io.disconnect();
     document.body.style.overflow = '';
   }
@@ -602,13 +707,22 @@ class Component extends DCLogic {
     if (!this.io) {
       this.io = new IntersectionObserver(entries => entries.forEach(e => {
         if (!e.isIntersecting) return;
-        e.target.style.opacity = '1'; e.target.style.transform = 'none'; this.io.unobserve(e.target);
+        const t = e.target;
+        if (t.hasAttribute('data-reveal-media')) t.style.clipPath = 'inset(0% 0% 0% 0% round 0px)';
+        else { t.style.opacity = '1'; t.style.transform = 'none'; t.style.filter = 'none'; }
+        this.io.unobserve(t);
       }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' });
     }
     document.querySelectorAll('[data-reveal]:not([data-rv])').forEach(el => {
       el.setAttribute('data-rv', '1');
-      el.style.opacity = '0'; el.style.transform = 'translateY(28px)';
-      el.style.transition = 'opacity 1.1s cubic-bezier(.2,.7,.2,1), transform 1.1s cubic-bezier(.2,.7,.2,1)';
+      el.style.opacity = '0'; el.style.transform = 'translateY(36px)'; el.style.filter = 'blur(6px)';
+      el.style.transition = 'opacity 1.2s cubic-bezier(.2,.7,.2,1), transform 1.2s cubic-bezier(.2,.7,.2,1), filter 1.2s cubic-bezier(.2,.7,.2,1)';
+      this.io.observe(el);
+    });
+    document.querySelectorAll('[data-reveal-media]:not([data-rv])').forEach(el => {
+      el.setAttribute('data-rv', '1');
+      el.style.clipPath = 'inset(7% 6% 7% 6% round 28px)';
+      el.style.transition = 'clip-path 1.6s cubic-bezier(.65,0,.25,1)';
       this.io.observe(el);
     });
   }
@@ -616,6 +730,7 @@ class Component extends DCLogic {
   later(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
   openInvite = () => {
     if (this.state.phase !== 'closed') return;
+    this.playMusic();
     if (this.reduced) {
       this.setState({ phase: 'leaving' });
       this.later(() => this.finishIntro(), 500);
@@ -683,9 +798,16 @@ class Component extends DCLogic {
   }
   editRsvp = () => this.setState({ status: 'idle' });
 
+  playMusic() {
+    const a = this.audioRef.current; if (!a || !a.paused) return;
+    const url = (this.props.musicUrl || DEFAULT_MUSIC).trim();
+    if (url && a.getAttribute('src') !== url) a.setAttribute('src', url);
+    a.volume = 0.6;
+    a.play().then(() => this.setState({ playing: true })).catch(() => this.setState({ playing: false }));
+  }
   toggleMusic = () => {
     const a = this.audioRef.current; if (!a) return;
-    const url = (this.props.musicUrl || '').trim();
+    const url = (this.props.musicUrl || DEFAULT_MUSIC).trim();
     if (url && a.getAttribute('src') !== url) a.setAttribute('src', url);
     if (a.paused) a.play().then(() => this.setState({ playing: true })).catch(() => this.setState({ playing: false }));
     else { a.pause(); this.setState({ playing: false }); }
@@ -708,7 +830,7 @@ class Component extends DCLogic {
     const pad = n => String(n).padStart(2, '0');
     const layout = this.props.heroLayout ?? 'Arch frame';
     const errBorder = bad => (bad ? '#8E1B2E' : 'rgba(179,148,89,.8)');
-    const music = (this.props.musicUrl || '').trim();
+    const music = (this.props.musicUrl || DEFAULT_MUSIC).trim();
 
     const events = EVENTS.map((ev, i) => ({
       ...ev,
@@ -726,6 +848,13 @@ class Component extends DCLogic {
     const item = ev => ({ no: ev.no, title: ev.title, time: ev.time, href: '#ev-' + ev.id });
 
     return {
+      showFlyers: phase === 'done' && !this.reduced && (this.props.petals ?? 'Gentle') !== 'Off',
+      flyers: this.flyers[(this.props.petals ?? 'Gentle')] || this.flyers.Gentle,
+      goldDust: this.goldDust, progressRef: this.progressRef,
+      mandalas: (this.props.mandalas ?? true) ? this.mandalaPair : null,
+      showStars: phase === 'done' && !this.reduced && (this.props.stars ?? true),
+      starsLayer: this.starsLayer,
+      rosePlateA: this.rosePlateA, rosePlateB: this.rosePlateB, rosePlateC: this.rosePlateC, rosePlateD: this.rosePlateD,
       slideFit: this.props.slideFit === 'Whole artwork' ? 'contain' : 'cover',
       showOverlay: phase !== 'done', opened,
       overlayOpacity: leaving ? 0 : 1,
