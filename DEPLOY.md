@@ -23,7 +23,7 @@ git push -u origin main --force
 - `index.html` (the site)
 - `support.js`, `image-slot.js`, `media-slot.js`
 - `assets/videos/*.mp4` (12 files, ~130 MB total; each is under GitHub's 100 MB per-file limit)
-- `assets/images/*.webp` (portraits)
+- `assets/images/groom-ashish.jpg`, `bride-meghna.jpg`, `couple-ashish-meghna.jpg` (photos; index.html loads these directly)
 - `.nojekyll` and `.image-slots.state.json` (hidden files; check they were unzipped. If `.nojekyll` is missing, run `touch .nojekyll`)
 
 ## Updating later
